@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gia Bao Huynh — Electrical Engineering, USF</title>
+<meta name="description" content="The interesting part is where it stops working. Gia Bao Huynh, majoring in electrical engineering at USF: laser-induced graphene fabrication, embedded sensing, and industrial automation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Palette: cutting mat green, copper accent. */
+:root{
+  --mat:        #2B4E42;   /* cutting mat green */
+  --mat-deep:   #24443A;   /* shadowed edge of the mat */
+  --grid-fine:  rgba(233,241,236,.055);
+  --grid-major: rgba(233,241,236,.11);
+
+  --ink:        #EDF3EF;
+  --ink-soft:   #ADC2B7;
+  --ink-faint:  #7E968B;
+  --rule:       rgba(233,241,236,.17);
+
+  --copper:     #CF8250;
+  --copper-lit: #E79C67;
+
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --body:    "Newsreader", Georgia, serif;
+  --mono:    "IBM Plex Mono", ui-monospace, monospace;
+
+  --rail: 268px;
+  --measure: 660px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--mat);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:18px;
+  line-height:1.62;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* mat surface: fine grid, inch grid, 45 degree guides */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    /* 45 degree cutting guides, barely there */
+    repeating-linear-gradient(45deg, rgba(233,241,236,.028) 0 1px, transparent 1px 116px),
+    /* major inch grid */
+    linear-gradient(to right,  var(--grid-major) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-major) 1px, transparent 1px),
+    /* fine subdivisions */
+    linear-gradient(to right,  var(--grid-fine) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-fine) 1px, transparent 1px);
+  background-size:
+    auto,
+    80px 80px,
+    80px 80px,
+    16px 16px,
+    16px 16px;
+}
+
+a{color:inherit}
+h1,h2,h3{font-family:var(--display); font-weight:700; letter-spacing:-.02em; line-height:1.05; margin:0}
+
+.tag{
+  font-family:var(--mono); font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-faint); font-weight:500;
+}
+
+/* ============================================================
+   RAIL — the printed edge of the mat, ruler and all
+   ============================================================ */
+.rail{
+  position:fixed; top:0; left:0; bottom:0; width:var(--rail);
+  padding:44px 34px; z-index:5;
+  display:flex; flex-direction:column; justify-content:space-between;
+  background:var(--mat-deep);
+  border-right:1px solid var(--rule);
+}
+/* ruler ticks down the inside edge */
+.rail::after{
+  content:""; position:absolute; top:0; right:0; bottom:0; width:11px;
+  background-image:
+    repeating-linear-gradient(to bottom, var(--rule) 0 1px, transparent 1px 70px),
+    repeating-linear-gradient(to bottom, rgba(233,241,236,.09) 0 1px, transparent 1px 14px);
+  background-size:11px 100%, 5px 100%;
+  background-position:right top, right top;
+  background-repeat:no-repeat, no-repeat;
+}
+
+.rail-name{font-family:var(--display); font-size:23px; font-weight:800; letter-spacing:-.03em}
+.rail-role{margin-top:6px; font-size:15px; color:var(--ink-soft)}
+.rail-role em{font-style:normal; color:var(--copper)}
+
+.nav{margin-top:40px; display:flex; flex-direction:column; gap:2px}
+.nav a{
+  display:flex; align-items:baseline; gap:12px;
+  text-decoration:none; padding:7px 0;
+  font-family:var(--mono); font-size:12px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-faint);
+  transition:color .22s ease;
+}
+.nav a::before{
+  content:""; display:block; width:14px; height:1px;
+  background:var(--rule); transition:width .22s ease, background .22s ease;
+}
+.nav a:hover{color:var(--ink)}
+.nav a.on{color:var(--ink)}
+.nav a.on::before{width:30px; background:var(--copper)}
+
+.rail-foot{font-family:var(--mono); font-size:11px; color:var(--ink-faint); line-height:1.9}
+.rail-foot a{text-decoration:none; border-bottom:1px solid var(--rule)}
+.rail-foot a:hover{color:var(--copper); border-color:var(--copper)}
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+main{position:relative; z-index:1; margin-left:var(--rail); padding:0 56px 120px}
+.wrap{max-width:var(--measure)}
+
+section{padding:78px 0; border-top:1px solid var(--rule); position:relative}
+section::before{
+  content:""; position:absolute; top:-1px; left:0;
+  width:30px; height:3px; background:var(--copper);
+}
+section:first-of-type{border-top:0; padding-top:64px}
+section:first-of-type::before{display:none}
+
+.sec-head{display:flex; align-items:baseline; gap:16px; margin-bottom:30px}
+.sec-head h2{font-size:30px}
+
+/* ---------- HERO ---------- */
+.hero-line{
+  font-family:var(--display); font-weight:800;
+  font-size:clamp(32px, 4.4vw, 46px); letter-spacing:-.012em; line-height:1.08;
+  margin:0;
+}
+.hero-line span{color:var(--copper)}
+/* one line at every width: nowrap + vw-scaled size so it never overflows */
+.hero-name{
+  margin:28px 0 0; line-height:1.5; color:var(--ink);
+  white-space:nowrap;
+  font-size:clamp(9px, 2.2vw, 22px);
+}
+.hero-name strong{
+  font-family:var(--display); font-weight:700; letter-spacing:-.02em;
+  font-size:1.05em;
+}
+/* quote marks sit back a shade so the sentence still leads */
+.hero-name .q{color:var(--ink-faint)}
+/* the left rail eats 268px of width, so cap the size lower up there */
+@media (min-width:1081px){
+  .hero-name{font-size:clamp(9px, 1.7vw, 19px)}
+}
+
+/* .shot = photo framed as a print lying on the mat. Reusable. */
+.shot{
+  margin:38px 0 0; padding:12px 12px 0;
+  background:#F2F1E9;
+  border:1px solid rgba(0,0,0,.18);
+  box-shadow:0 14px 30px rgba(0,0,0,.26), 0 2px 0 rgba(0,0,0,.12);
+  transform:rotate(-.5deg);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+}
+/* straightens and lifts on hover */
+.shot:hover{
+  transform:rotate(0deg) translateY(-4px);
+  box-shadow:0 26px 46px rgba(0,0,0,.34), 0 2px 0 rgba(0,0,0,.12);
+}
+.shot img{
+  display:block; width:100%; height:auto;
+  aspect-ratio:3 / 2;      /* any photo fills the frame ... */
+  object-fit:cover;        /* ... cropped, never stretched */
+  background:#DCDCD4;      /* shows while the file loads */
+}
+.shot figcaption{
+  display:flex; justify-content:space-between; gap:16px;
+  padding:10px 2px 12px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.05em; color:#767A70;
+}
+
+/* ---------- ABOUT ---------- */
+.lede{font-size:21px; line-height:1.55}
+.lede em{font-style:italic; color:var(--copper)}
+.about p + p{margin-top:20px}
+
+/* ---------- WORK ---------- */
+.entry{
+  padding:30px 0; border-bottom:1px solid var(--rule);
+  border-left:2px solid transparent;
+  transition:border-color .18s ease, padding-left .18s ease;
+}
+.entry:hover{border-left-color:var(--copper); padding-left:15px}
+.entry:last-child{border-bottom:0; padding-bottom:6px}
+.entry-top{display:flex; justify-content:space-between; align-items:baseline; gap:20px; flex-wrap:wrap}
+.entry h3{font-size:22px; margin-top:8px}
+.entry .where{margin-top:5px; font-size:16px; color:var(--ink-soft); font-style:italic}
+.entry ul{margin:16px 0 0; padding-left:0; list-style:none}
+.entry li{position:relative; padding-left:22px; margin-bottom:9px; font-size:17px; color:var(--ink-soft)}
+.entry li::before{
+  content:""; position:absolute; left:0; top:.72em;
+  width:10px; height:1px; background:var(--copper);
+}
+.stack{
+  margin-top:14px; font-family:var(--mono);
+  font-size:11px; letter-spacing:.04em; color:var(--ink-faint);
+}
+.stack span:not(:last-child)::after{content:" \00b7 "}
+
+/* ---------- TOOLKIT ---------- */
+.kit p{margin:0 0 15px; font-size:17px; color:var(--ink-soft); line-height:1.6}
+.kit b{
+  color:var(--copper); font-weight:400; font-family:var(--mono);
+  font-size:12px; letter-spacing:.06em; margin-right:9px;
+}
+
+/* ---------- EDUCATION ---------- */
+.edu-top{display:flex; justify-content:space-between; align-items:baseline; gap:20px; flex-wrap:wrap}
+.edu h3{font-size:22px}
+.edu p{margin:6px 0 0; color:var(--ink-soft); font-size:17px}
+.awards{margin:26px 0 0; padding:0; list-style:none}
+.awards li{
+  padding:11px 0; border-top:1px solid var(--rule);
+  display:flex; justify-content:space-between; gap:18px; font-size:16px; color:var(--ink-soft);
+}
+.awards li span{font-family:var(--mono); font-size:12px; color:var(--ink-faint); white-space:nowrap}
+
+/* ---------- CONTACT ---------- */
+.contact h2{font-size:clamp(30px,4.6vw,46px); letter-spacing:-.03em}
+.links{margin-top:28px; display:flex; flex-direction:column}
+.links a{
+  display:flex; justify-content:space-between; align-items:center; gap:20px;
+  padding:17px 0; border-top:1px solid var(--rule);
+  text-decoration:none; font-size:19px;
+  transition:padding-left .22s ease, color .22s ease;
+}
+.links a:last-child{border-bottom:1px solid var(--rule)}
+.links a span{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint)}
+.links a:hover{padding-left:12px; color:var(--copper-lit)}
+.links a:hover span{color:var(--copper-lit)}
+
+/* ---------- REVEAL ---------- */
+.rise{opacity:0; transform:translateY(16px); transition:opacity .7s ease, transform .7s ease}
+.rise.seen{opacity:1; transform:none}
+
+/* ---------- ACCESSIBILITY ---------- */
+a:focus-visible{outline:2px solid var(--copper-lit); outline-offset:4px}
+/* lamp: the mat grid reads sharper where the cursor falls, as if a desk
+   lamp were swept over the surface. Same grid sizes as body::before so
+   the two layers register exactly; only the mask moves. */
+.lamp{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  opacity:0; transition:opacity .45s ease;
+  background-image:
+    linear-gradient(to right,  rgba(233,241,236,.20) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(233,241,236,.20) 1px, transparent 1px),
+    linear-gradient(to right,  rgba(233,241,236,.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(233,241,236,.10) 1px, transparent 1px);
+  background-size:80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  -webkit-mask-image:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),
+                     #000 0%, rgba(0,0,0,.4) 48%, transparent 72%);
+          mask-image:radial-gradient(300px circle at var(--mx,50%) var(--my,50%),
+                     #000 0%, rgba(0,0,0,.4) 48%, transparent 72%);
+}
+.lamp.on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important; transition:none !important}
+  .rise{opacity:1; transform:none}
+  .trace{stroke-dashoffset:0}
+  .pt,.min-rule,.min-txt{opacity:1}
+  .shot{transition:none}
+  .entry:hover{border-left-color:transparent; padding-left:0}
+  .lamp{display:none}
+}
+@media (hover:none){
+  .lamp{display:none}
+  /* no cursor to hover with, so no hover states */
+  .entry:hover{border-left-color:transparent; padding-left:0}
+  .shot:hover{transform:rotate(-.5deg)}
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1080px){
+  :root{--rail:0px}
+  .rail{
+    position:sticky; top:0; left:auto; bottom:auto; width:auto;
+    flex-direction:row; align-items:center; justify-content:space-between;
+    padding:14px 22px; border-right:0; border-bottom:1px solid var(--rule);
+    gap:16px;
+  }
+  .rail::after{
+    top:auto; right:0; bottom:0; left:0; width:auto; height:7px;
+    background-image:
+      repeating-linear-gradient(to right, var(--rule) 0 1px, transparent 1px 70px),
+      repeating-linear-gradient(to right, rgba(233,241,236,.09) 0 1px, transparent 1px 14px);
+    background-size:100% 7px, 100% 4px;
+    background-position:left bottom, left bottom;
+  }
+  .rail-role,.rail-foot{display:none}
+  .rail-name{font-size:18px}
+  .nav{margin-top:0; flex-direction:row; gap:16px; overflow-x:auto; scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{padding:0; font-size:11px; white-space:nowrap}
+  .nav a::before{display:none}
+  main{margin-left:0; padding:0 22px 90px}
+  body{font-size:17px}
+}
+@media (max-width:520px){
+  .entry-top,.edu-top{flex-direction:column; gap:4px}
+  .shot{padding:9px 9px 0; transform:none}
+  .shot figcaption{flex-direction:column; gap:4px}
+}
+</style>
+</head>
+<body>
+<div class="lamp" id="lamp" aria-hidden="true"></div>
+
+<header class="rail">
+  <div>
+    <div class="rail-name">Gia Bao Huynh</div>
+    <div class="rail-role">Electrical engineering at <em>USF</em></div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#home" class="on">Start</a>
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+  <div class="rail-foot">
+    Tampa, Florida<br>
+    <a href="mailto:giabaohuynh@usf.edu">giabaohuynh@usf.edu</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <!-- ===================== HERO ===================== -->
+  <section id="home">
+    <h1 class="hero-line">The interesting part is<br>where it <span>stops working</span>.</h1>
+
+    <p class="hero-name"><span class="q">&ldquo;</span>Hi everyone, I'm <strong>Gia Bao Huynh</strong>, majoring in electrical engineering at&nbsp;USF.<span class="q">&rdquo;</span></p>
+
+    <!-- Hero photo lives at images/hero.jpg (1600x1066, 3:2).
+         Swap the file to change the picture; keep the same name and
+         ratio and nothing else needs touching. -->
+    <figure class="shot">
+      <img src="images/hero.jpg"
+           alt="Wiring a control panel: driver board, breakers, and terminal blocks inside an open enclosure, cordless driver in hand."
+           width="1600" height="1066">
+      <figcaption>
+        <span>Panel build, DAT Group &mdash; Ho Chi Minh City</span>
+        <span>2025</span>
+      </figcaption>
+    </figure>
+
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about" class="about rise">
+    <div class="sec-head"><h2>About</h2></div>
+    <p class="lede">The question I keep coming back to: <em>how cheaply can you make a surface conductive without giving up the properties that made it useful in the first place?</em></p>
+    <p>A copper trace on a rigid board is a solved problem. A conductive trace on fabric that survives bending, washing, and a human body is not. In Dr. Takshi's Bio-Organic Electronics Lab I work on one narrow piece of that: converting lignin into laser-induced graphene, then electroplating copper on top, and finding the laser setting where the result is conductive enough to compete with a normal PCB trace.</p>
+    <p>The rest of my work sits on the other side of the same problem. If you are going to put electronics on a person, something has to read the sensors, decide what matters, and respond fast enough to be useful. That is where the embedded projects come from.</p>
+    <p>I am a second-year student at USF, and I also lead the hardware team for ACM's project hub and run electronics workshops for IEEE RAS.</p>
+  </section>
+
+  <!-- ===================== WORK ===================== -->
+  <section id="work" class="rise">
+    <div class="sec-head"><h2>Work</h2></div>
+
+    <article class="entry">
+      <div class="entry-top">
+        <span class="tag">Materials &amp; fabrication</span>
+        <span class="tag">Jul 2026 &rarr; now</span>
+      </div>
+      <h3>Laser-induced graphene on fabric</h3>
+      <p class="where">Research Volunteer, Bio-Organic Electronics Lab, USF</p>
+      <ul>
+        <li>Ran more than 50 trial samples on an integrated laser-etching and copper-electroplating system to find the laser power that converts lignin to conductive graphene most reliably.</li>
+        <li>Measured sheet resistance across sample batches and benchmarked it against copper trace resistance on standard PCBs, which set the target for the electroplating step.</li>
+        <li>Evaluated conductivity, adhesion, and repeatability, and documented where etch depth and uniformity broke down between batches.</li>
+        <li>Presented results to the research team, including the trade-off between laser power, etch quality, and plating outcome.</li>
+      </ul>
+      <div class="stack"><span>laser etching</span><span>electroplating</span><span>sheet resistance</span><span>materials characterisation</span></div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-top">
+        <span class="tag">Embedded sensing</span>
+        <span class="tag">Project</span>
+      </div>
+      <h3>Dual-IMU wearable for cervical posture</h3>
+      <p class="where">ESP32 &middot; two BNO055 sensors &middot; on-device classification</p>
+      <ul>
+        <li>Put one IMU on a headband and one on a vest so the system reads the angle between head and torso rather than either one alone.</li>
+        <li>Ran adaptive thresholding on the ESP32 itself, so the wearable classifies posture without a phone or a network connection, and answers with vibration.</li>
+        <li>Validated on 32 USF students at 85% posture-classification accuracy, and built a labelled activities-of-daily-living dataset from those sessions.</li>
+      </ul>
+      <div class="stack"><span>ESP32</span><span>BNO055</span><span>TinyML</span><span>I2C</span><span>haptics</span></div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-top">
+        <span class="tag">Embedded &amp; ML</span>
+        <span class="tag">Project</span>
+      </div>
+      <h3>Light switch that notices you fell asleep</h3>
+      <p class="where">ESP32 &middot; scikit-learn &middot; Fusion 360</p>
+      <ul>
+        <li>Trained a sleep-onset classifier to above 85% accuracy and ran it on the microcontroller, switching room lighting through a relay.</li>
+        <li>Streamed sensor data over UART between the MCU and its peripherals, then designed and 3D-printed an enclosure that survived 50+ hours of continuous operation.</li>
+      </ul>
+      <div class="stack"><span>scikit-learn</span><span>UART</span><span>relay control</span><span>3D printing</span></div>
+    </article>
+
+    <article class="entry">
+      <div class="entry-top">
+        <span class="tag">Robotics &amp; team lead</span>
+        <span class="tag">Jul 2026 &rarr; now</span>
+      </div>
+      <h3>Six-axis arm, and the team building it</h3>
+      <p class="where">Hardware Lead, ACM Project Hub Team, USF</p>
+      <ul>
+        <li>Lead a 20+ member hardware team across concurrent builds, setting milestones and reviewing wiring in weekly syncs.</li>
+        <li>Direct the six-axis arm build: actuator and joint selection, microcontroller motion control, and mechanical-to-electrical integration.</li>
+      </ul>
+    </article>
+
+    <article class="entry">
+      <div class="entry-top">
+        <span class="tag">Teaching</span>
+        <span class="tag">Mar 2026 &rarr; now</span>
+      </div>
+      <h3>Reading a bus on a scope, for 100+ people</h3>
+      <p class="where">Workshop Chair, IEEE Robotics &amp; Automation Society, USF</p>
+      <ul>
+        <li>Built and delivered a serial communication workshop covering UART, I2C, and SPI, with clock and data lines captured side by side so the framing differences are visible rather than described.</li>
+        <li>Ran lab sessions where participants wired a GPS module, an IMU, and a hard drive to a microcontroller and debugged the faults live.</li>
+      </ul>
+    </article>
+
+    <article class="entry">
+      <div class="entry-top">
+        <span class="tag">Industrial automation</span>
+        <span class="tag">Apr &rarr; Jul 2025</span>
+      </div>
+      <h3>PLC systems on the factory side</h3>
+      <p class="where">Automation Engineering Intern, DAT Group, Ho Chi Minh City</p>
+      <ul>
+        <li>Evaluated PLC-based automation systems and documented specifications for three product lines, which fed directly into sales planning.</li>
+        <li>Analysed sustainable energy product specs for client proposals and translated automation concepts for non-technical stakeholders during demonstrations.</li>
+      </ul>
+    </article>
+  </section>
+
+  <!-- ===================== TOOLKIT ===================== -->
+  <section id="toolkit" class="rise">
+    <div class="sec-head"><h2>Toolkit</h2></div>
+    <div class="kit">
+      <p><b>Bench</b> Oscilloscopes, multimeters, function generators, logic analysers, sheet resistance testing, laser etching, electroplating rigs.</p>
+      <p><b>Boards</b> ESP32, ARM microcontrollers, I2C, SPI, UART, GPIO, relay control, sensor integration, PCB troubleshooting. PLC fundamentals, ladder logic, I/O wiring.</p>
+      <p><b>Design</b> Altium Designer, KiCad, Fusion 360, 3D printing.</p>
+      <p><b>Code</b> C, C++, Python, MATLAB, Git, scikit-learn.</p>
+      <p>Workshops and documentation in English and Vietnamese.</p>
+    </div>
+  </section>
+
+  <!-- ===================== EDUCATION ===================== -->
+  <section id="education" class="edu rise">
+    <div class="sec-head"><h2>Education</h2></div>
+    <div class="edu-top">
+      <h3>B.S. Electrical Engineering</h3>
+      <span class="tag">Expected Jan 2029</span>
+    </div>
+    <p>University of South Florida, Tampa &middot; GPA 3.94</p>
+    <p>Circuit analysis, signals and systems, embedded systems design, electromagnetic fields, digital logic, probability and statistics for engineers.</p>
+    <ul class="awards">
+      <li>USF College of Engineering Alumni Society Scholarship <span>2026</span></li>
+      <li>Bronze Medal, April Physics Olympics, Ho Chi Minh City <span>2024</span></li>
+      <li>Certificate of Excellent Student, District-Level Technology Contest <span>2023</span></li>
+    </ul>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact" class="contact rise">
+    <div class="sec-head"><h2>Contact</h2></div>
+    <h2>Happy to talk about hardware, fabrication,<br>or anything on this page.</h2>
+    <div class="links">
+      <a href="mailto:giabaohuynh@usf.edu">giabaohuynh@usf.edu <span>Email</span></a>
+      <a href="https://linkedin.com/in/gia-bao-huynh">linkedin.com/in/gia-bao-huynh <span>LinkedIn</span></a>
+      <a href="#" data-todo="point this at your GitHub">github.com/your-username <span>GitHub</span></a>
+      <a href="#" data-todo="drop resume.pdf in the repo and link it here">Resume, one page, PDF <span>Download</span></a>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<script>
+// Highlight the section currently in view, and reveal sections on scroll.
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var sections = links
+    .map(function (a) { return document.querySelector(a.getAttribute('href')); })
+    .filter(Boolean);
+
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      links.forEach(function (a) {
+        a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id);
+      });
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  sections.forEach(function (s) { spy.observe(s); });
+
+  var reveal = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('seen');
+      obs.unobserve(e.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px' });
+  document.querySelectorAll('.rise').forEach(function (el) { reveal.observe(el); });
+})();
+
+// Move the lamp mask with the pointer. Skipped on touch screens and when
+// the person has asked for reduced motion.
+(function () {
+  var lamp = document.getElementById('lamp');
+  if (!lamp) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  var x = 0, y = 0, queued = false;
+  window.addEventListener('pointermove', function (e) {
+    x = e.clientX; y = e.clientY;
+    if (queued) return;
+    queued = true;
+    // one write per frame instead of one per mousemove event
+    requestAnimationFrame(function () {
+      lamp.style.setProperty('--mx', x + 'px');
+      lamp.style.setProperty('--my', y + 'px');
+      lamp.classList.add('on');
+      queued = false;
+    });
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', function () {
+    lamp.classList.remove('on');
+  });
+})();
+
+</script>
+</body>
+</html>
